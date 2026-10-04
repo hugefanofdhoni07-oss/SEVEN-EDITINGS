@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seven Editings — Photo & Video Editing Studio</title>
+<meta name="description" content="Seven Editings — professional photo retouching, color grading, cinematic edits and social content editing.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="studio.css">
+<link rel="stylesheet" href="studio_animations.css">
+<style>
+  .marquee{ border-top:1px solid rgba(243,233,210,0.12); border-bottom:1px solid rgba(243,233,210,0.12); overflow:hidden; padding:20px 0; background:#161209; position:relative; display:flex; user-select:none; mask-image:linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%); -webkit-mask-image:linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%); }
+  .marquee-track{ display:flex; width:max-content; flex-shrink:0; will-change:transform; }
+  .marquee-group{ display:flex; align-items:center; flex-shrink:0; }
+  .marquee-group span{ font-family:'JetBrains Mono', monospace; font-size:.82rem; letter-spacing:.14em; text-transform:uppercase; color:#cdc0a0; padding:0 24px; display:inline-flex; align-items:center; white-space:nowrap; }
+  .marquee-group span b{ color:#c9a227; font-weight:600; }
+</style>
+<script src="https://cdn.jsdelivr.net/gh/darkroomengineering/lenis@latest"></script>
+</head>
+<body>
+
+<div id="loader">
+  <div class="letterbox-bar top"></div>
+  <div class="letterbox-bar bottom"></div>
+  <div class="slate">
+    <span class="slate-top">SEVEN EDITINGS</span>
+    <span class="slate-tc mono">TC 00:00:00:00 — LOADING TAKE</span>
+    <div class="clapper"></div>
+  </div>
+</div>
+
+<div id="cursorRing"></div>
+<div id="cursorDot"></div>
+
+<div id="scrubber">
+  <div class="track">
+    <canvas class="audio-wave-canvas" id="audioWaveCanvas"></canvas>
+    <div class="ticks" id="ticks"></div>
+    <div class="playhead" id="playhead"></div>
+  </div>
+  <div class="tc" id="tcReadout">
+    <span class="audio-live-pill"><span class="dot"></span>LIVE TIMELINE</span>
+    TC <b>00:00:00:00</b> / 02:30:00:00
+  </div>
+</div>
+
+<header id="siteHeader">
+  <div class="wrap">
+    <div class="logo"><span class="num">7</span>&nbsp;SEVEN EDITINGS</div>
+    <div class="navlinks">
+      <nav>
+        <ul>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#portfolio">Portfolio</a></li>
+          <li><a href="#process">Process</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <button id="navToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section id="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <span class="blob b1"></span>
+      <span class="blob b2"></span>
+      <span class="blob b3"></span>
+    </div>
+    <div class="grid-overlay" aria-hidden="true"></div>
+    <div class="film-dust" id="filmDust" aria-hidden="true"></div>
+    <div class="hero-vignette" aria-hidden="true"></div>
+    <div class="scan-beam" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <div class="eyebrow">00:00:00:00 — REEL START</div>
+      <h1>ORDINARY FOOTAGE.<br><span class="gold">GRADED. CUT. DELIVERED.</span></h1>
+      <p class="lede">Seven Editings turns raw photos and clips into professional, share-ready content — retouched, color graded, and cut for the feed, the reel, or the big screen.</p>
+      <div class="ctas">
+        <a href="#contact" class="btn">Start a project</a>
+        <a href="#portfolio" class="btn ghost">See the reel</a>
+      </div>
+
+      <div class="trust-row">
+        <div class="avatars" aria-hidden="true">
+          <span>RA</span><span>MO</span><span>JT</span><span>+</span>
+        </div>
+        <div class="trust-text">★★★★★ <b>4.9/5</b> from 200+ clients</div>
+      </div>
+
+      <!-- Preserved Hero Demo Comparison Photo -->
+      <div class="compare-wrap">
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+
+        <div class="float-tag t1"><b></b>24H AVG TURNAROUND</div>
+        <div class="float-tag t2"><b></b>500+ PROJECTS CUT</div>
+
+        <div class="compare" id="compare">
+          <div class="frame raw" id="heroRawFrame"><span class="tag">RAW — CAM 01</span></div>
+          <div class="frame graded" id="gradedFrame"><span class="tag">GRADED — SE FINAL</span></div>
+          <div class="handle" id="handle"><div class="grip"></div></div>
+          <input type="range" id="compareRange" min="0" max="100" value="50" aria-label="Drag to compare raw and graded frame">
+        </div>
+        <div class="compare-caption">
+          <span>DRAG TO COMPARE</span>
+          <span>SEVEN EDITINGS — COLOR GRADE DEMO</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-cue" aria-hidden="true">
+      <span class="line"></span>
+      <span class="label">SCROLL</span>
+    </div>
+  </section>
+
+  <div class="marquee" aria-label="Studio capabilities marquee">
+    <div class="marquee-track">
+      <div class="marquee-group">
+        <span><b>PHOTO RETOUCH</b> •</span><span><b>COLOR GRADE</b> •</span><span><b>CINEMATIC CUT</b> •</span><span><b>THUMBNAIL DESIGN</b> •</span><span><b>SOCIAL EDIT</b> •</span><span><b>CUSTOM REQUEST</b> •</span>
+        <span><b>PHOTO RETOUCH</b> •</span><span><b>COLOR GRADE</b> •</span><span><b>CINEMATIC CUT</b> •</span><span><b>THUMBNAIL DESIGN</b> •</span><span><b>SOCIAL EDIT</b> •</span><span><b>CUSTOM REQUEST</b> •</span>
+      </div>
+      <div class="marquee-group" aria-hidden="true">
+        <span><b>PHOTO RETOUCH</b> •</span><span><b>COLOR GRADE</b> •</span><span><b>CINEMATIC CUT</b> •</span><span><b>THUMBNAIL DESIGN</b> •</span><span><b>SOCIAL EDIT</b> •</span><span><b>CUSTOM REQUEST</b> •</span>
+        <span><b>PHOTO RETOUCH</b> •</span><span><b>COLOR GRADE</b> •</span><span><b>CINEMATIC CUT</b> •</span><span><b>THUMBNAIL DESIGN</b> •</span><span><b>SOCIAL EDIT</b> •</span><span><b>CUSTOM REQUEST</b> •</span>
+      </div>
+    </div>
+  </div>
+
+  <section id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 data-reveal>What we cut</h2>
+        <p class="desc" data-reveal>Six core services, one studio. Every request is treated as its own take — shot, reviewed, and delivered to spec.</p>
+      </div>
+      <div class="svc-grid">
+        <div class="svc-card" data-reveal>
+          <div class="svc-photo-wrap">
+            <img class="svc-photo" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80" alt="Photo Retouching studio take" loading="lazy">
+          </div>
+          <div class="svc-header">
+            <span class="clip mono">C001</span>
+            <span class="svc-tag-live mono">4K RETOUCH</span>
+          </div>
+          <div class="svc-body">
+            <h3>Photo Retouching</h3>
+            <p>Skin, blemish and high-frequency texture cleanup that still looks like real film — not an artificial filter.</p>
+          </div>
+        </div>
+
+        <div class="svc-card" data-reveal>
+          <div class="svc-photo-wrap">
+            <img class="svc-photo" src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80" alt="Color Grading studio take" loading="lazy">
+          </div>
+          <div class="svc-header">
+            <span class="clip mono">C002</span>
+            <span class="svc-tag-live mono">10-BIT LOG</span>
+          </div>
+          <div class="svc-body">
+            <h3>Color Grading</h3>
+            <p>Mood and tone crafted shot-by-shot, from organic golden hour warmth to high-contrast cinematic looks.</p>
+          </div>
+        </div>
+
+        <div class="svc-card" data-reveal>
+          <div class="svc-photo-wrap">
+            <img class="svc-photo" src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=800&q=80" alt="Cinematic Edits studio take" loading="lazy">
+          </div>
+          <div class="svc-header">
+            <span class="clip mono">C003</span>
+            <span class="svc-tag-live mono">60 FPS CUT</span>
+          </div>
+          <div class="svc-body">
+            <h3>Cinematic Edits</h3>
+            <p>Dynamic pacing, sound design sync, match cuts, and VFX transitions for films, commercials, and brand stories.</p>
+          </div>
+        </div>
+
+        <div class="svc-card" data-reveal>
+          <div class="svc-photo-wrap">
+            <img class="svc-photo" src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80" alt="Thumbnail Design studio take" loading="lazy">
+          </div>
+          <div class="svc-header">
+            <span class="clip mono">C004</span>
+            <span class="svc-tag-live mono">HIGH CTR</span>
+          </div>
+          <div class="svc-body">
+            <h3>Thumbnail Design</h3>
+            <p>High-contrast, attention-grabbing thumbnails engineered to dominate the feed and maximize click-through.</p>
+          </div>
+        </div>
+
+        <div class="svc-card" data-reveal>
+          <div class="svc-photo-wrap">
+            <img class="svc-photo" src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80" alt="Social Content Editing studio take" loading="lazy">
+          </div>
+          <div class="svc-header">
+            <span class="clip mono">C005</span>
+            <span class="svc-tag-live mono">9:16 VERTICAL</span>
+          </div>
+          <div class="svc-body">
+            <h3>Social Content Editing</h3>
+            <p>Reels, Shorts, and TikToks cut to native pacing with motion graphics, captions, and hook pacing.</p>
+          </div>
+        </div>
+
+        <div class="svc-card" data-reveal>
+          <div class="svc-photo-wrap">
+            <img class="svc-photo" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=800&q=80" alt="Custom Requests studio take" loading="lazy">
+          </div>
+          <div class="svc-header">
+            <span class="clip mono">C006</span>
+            <span class="svc-tag-live mono">CUSTOM SCOPE</span>
+          </div>
+          <div class="svc-body">
+            <h3>Custom Requests</h3>
+            <p>Outside standard packages? Multi-cam edits, podcast suites, or full series — send the brief, we'll scope it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stats">
+    <div class="wrap">
+      <div class="stats-grid">
+        <div class="stat" data-reveal="scale">
+          <span class="num mono" data-count="500" data-suffix="+">0</span>
+          <div class="stat-vu-meter"><span></span><span></span><span></span><span></span></div>
+          <div class="label">Projects delivered</div>
+        </div>
+        <div class="stat" data-reveal="scale">
+          <span class="num mono" data-count="98" data-suffix="%">0</span>
+          <div class="stat-vu-meter"><span></span><span></span><span></span><span></span></div>
+          <div class="label">On-time delivery</div>
+        </div>
+        <div class="stat" data-reveal="scale">
+          <span class="num mono" data-count="49" data-suffix="" data-decimal="1">0</span>
+          <div class="stat-vu-meter"><span></span><span></span><span></span><span></span></div>
+          <div class="label">Average rating / 5</div>
+        </div>
+        <div class="stat" data-reveal="scale">
+          <span class="num mono" data-count="72" data-suffix="h">0</span>
+          <div class="stat-vu-meter"><span></span><span></span><span></span><span></span></div>
+          <div class="label">Avg. turnaround</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="portfolio">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 data-reveal>Selected cuts</h2>
+        <p class="desc" data-reveal>Hover a cut to preview the real-time grade wipe. Move mouse horizontally across tiles to split the grade live.</p>
+      </div>
+      <div class="filters" data-reveal>
+        <button class="filter-btn active" data-filter="all">All Videos</button>
+        <button class="filter-btn" data-filter="Instagram Reels">Instagram Reels</button>
+        <button class="filter-btn" data-filter="Text Intro">Text &amp; Titles</button>
+        <button class="filter-btn" data-filter="Cinema Edits">Cinema Edits</button>
+        <button class="filter-btn" data-filter="Speed Ramp">Speed Ramp</button>
+        <button class="filter-btn" data-filter="Quality Enhancement">Enhancement</button>
+        <button class="filter-btn" data-filter="Ai Scenes Recreations">AI Recreations</button>
+      </div>
+      <div class="port-grid" id="portGrid"></div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 data-reveal>How a project runs</h2>
+        <p class="desc" data-reveal>Four checkpoints from initial footage drop to master export — monitored like a real post-production timeline.</p>
+      </div>
+      <div class="strip" id="strip">
+        <div class="strip-step"><span class="tc mono">TC 00:00</span><h3>Upload footage</h3><p>Share raw photos, video clips, or sound files via secure link — any format or resolution.</p></div>
+        <div class="strip-step"><span class="tc mono">TC 00:15</span><h3>Creative brief</h3><p>Specify the desired mood, color palette, platform, and deadline. We confirm scope immediately.</p></div>
+        <div class="strip-step"><span class="tc mono">TC 00:45</span><h3>Edit &amp; review</h3><p>Receive your first pass review link. Request targeted revisions — iterations are baked in.</p></div>
+        <div class="strip-step"><span class="tc mono">TC 01:10</span><h3>Final delivery</h3><p>Download full uncompressed exports formatted and color-managed for your delivery channels.</p></div>
+      </div>
+
+      <!-- Interactive NLE Multi-Track Timeline Visualizer -->
+      <div class="nle-timeline-box" data-reveal>
+        <div class="nle-live-playhead"></div>
+        <div class="nle-header">
+          <span>TIMELINE: <b>SEVEN_EDITINGS_MASTER_SEQUENCE</b></span>
+          <span class="mono">24.00 FPS • PRORES 422 HQ</span>
+        </div>
+        <div class="nle-tracks">
+          <div class="nle-track">
+            <span class="nle-track-label">V2</span>
+            <div class="nle-track-bar">
+              <div class="nle-clip c1">COLOR GRADE MASTER (REC.709)</div>
+              <div class="nle-clip c3">GRAPHICS &amp; TITLES</div>
+            </div>
+          </div>
+          <div class="nle-track">
+            <span class="nle-track-label">V1</span>
+            <div class="nle-track-bar">
+              <div class="nle-clip c2">RAW FOOTAGE CUT A</div>
+              <div class="nle-clip c1">B-ROLL TAKES</div>
+              <div class="nle-clip c4">ACTION CLOSEUP</div>
+            </div>
+          </div>
+          <div class="nle-track">
+            <span class="nle-track-label">A1</span>
+            <div class="nle-track-bar">
+              <div class="nle-audio-clip">▲ SOUND DESIGN &amp; FOLEY MIX — -14 LUFS INTEGRATED</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="testimonials">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 data-reveal>What clients say</h2>
+        <p class="desc" data-reveal>Direct feedback from recent director and creator collaborations. Full case studies shared on request.</p>
+      </div>
+      <div class="t-carousel" data-reveal="scale">
+        <div class="t-track" id="tTrack">
+          <div class="t-slide">
+            <div class="star-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+            <span class="t-quote">"</span>
+            <p>Sent over a shaky vertical clip and got back something that actually looked like it belonged on the channel. Turnaround was faster than I expected.</p>
+            <div class="who">R. ANAND — CONTENT CREATOR</div>
+          </div>
+          <div class="t-slide">
+            <div class="star-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+            <span class="t-quote">"</span>
+            <p>The color grade completely changed the feel of our brand shoot. Every revision came back same-day, no back and forth needed.</p>
+            <div class="who">M. OKAFOR — SMALL BUSINESS OWNER</div>
+          </div>
+          <div class="t-slide">
+            <div class="star-rating"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+            <span class="t-quote">"</span>
+            <p>Thumbnails alone were worth it — click-through went up the week after we switched. Easy to brief, easy to work with.</p>
+            <div class="who">J. TANAKA — YOUTUBE EDITOR</div>
+          </div>
+        </div>
+        <div class="t-controls">
+          <button class="t-arrow" id="tPrev" aria-label="Previous testimonial">◂</button>
+          <div class="t-dots" id="tDots"></div>
+          <button class="t-arrow" id="tNext" aria-label="Next testimonial">▸</button>
+        </div>
+        <div class="t-progress"><span class="t-progress-fill" id="tProgressFill"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 data-reveal>Pricing</h2>
+        <p class="desc" data-reveal>Simple packages to start. Custom scopes are quoted after a quick brief — no surprises.</p>
+      </div>
+      <div class="price-grid">
+        <div class="price-card" data-reveal>
+          <span class="tier mono">STARTER</span>
+          <div class="price">Rs.100<span>&nbsp;/ asset</span></div>
+          <p class="note">For single photos or quick video cleanup.</p>
+          <ul><li>1 photo or clip, 1 revision</li><li>Retouching or color grade</li><li>48-hour delivery</li></ul>
+          <a href="#contact" class="btn ghost">Choose Starter</a>
+        </div>
+        <div class="price-card featured" data-reveal="scale">
+          <span class="tier mono">PRO</span>
+          <div class="price">Rs.400<span>&nbsp;/ project</span></div>
+          <p class="note">For creators with regular turnaround.</p>
+          <ul><li>Up to 10 photos or 1 short video edit</li><li>Color grading + thumbnail</li><li>2 rounds of revisions</li><li>24-hour priority delivery</li></ul>
+          <a href="#contact" class="btn">Choose Pro</a>
+        </div>
+        <div class="price-card" data-reveal>
+          <span class="tier mono">STUDIO</span>
+          <div class="price">Custom</div>
+          <p class="note">For businesses and brands with ongoing needs.</p>
+          <ul><li>Full cinematic edits &amp; commercials</li><li>Dedicated editor &amp; brand style guide</li><li>Unlimited revisions window</li><li>Priority post queue</li></ul>
+          <a href="#contact" class="btn ghost">Talk to us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 data-reveal>Frequently asked</h2>
+        <p class="desc" data-reveal>What people usually check before sending a brief.</p>
+      </div>
+      <div class="faq-list" data-reveal>
+        <div class="faq-item open">
+          <button class="faq-q">What's the usual turnaround?<span class="icon"></span></button>
+          <div class="faq-a"><p>Most single asset edits are back within 48 hours; Pro and Studio projects get priority queues, usually 24 hours or less depending on scope.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">What file formats do you accept?<span class="icon"></span></button>
+          <div class="faq-a"><p>JPEG, PNG, TIFF, and RAW (CR3, ARW, NEF, DNG) for photos; MP4, MOV, ProRes, BRAW, and Log formats for video. If your device exports something unusual, send it over and we'll confirm.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">How many revisions are included?<span class="icon"></span></button>
+          <div class="faq-a"><p>Starter includes 1 round, Pro includes 2, and Studio includes an unlimited revisions window for the length of the engagement.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Do you offer rush delivery?<span class="icon"></span></button>
+          <div class="faq-a"><p>Yes — flag it in the brief and we'll confirm a rush fee and timeline before starting, so there's never a surprise on delivery day.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">How do I pay?<span class="icon"></span></button>
+          <div class="faq-a"><p>Payment details are confirmed once scope is agreed in the brief reply — nothing is charged before you've approved the plan.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div class="contact-info" data-reveal="left">
+          <div class="eyebrow">TC 02:30:00:00 — END SLATE</div>
+          <h2>Send the brief</h2>
+          <p>Tell us what you're working with and what it's for. We'll reply with scope, timeline and price before anything starts.</p>
+          <div class="contact-line"><span>Email</span><span>seveneditings@gmail.com</span></div>
+          <div class="contact-line"><span>Response time</span><span>Within 24 hours</span></div>
+          <div class="contact-line"><span>Based in</span><span>Remote — worldwide</span></div>
+        </div>
+        <div class="ticket" data-reveal="right">
+          <div class="ticket-head"><span>NEW_PROJECT.TICKET</span><span id="ticketTc">00:00:00:00</span></div>
+          <form id="projectForm">
+            <div class="field"><label for="name">Name</label><input type="text" id="name" name="name" required placeholder="Your name"></div>
+            <div class="field"><label for="email">Email</label><input type="email" id="email" name="email" required placeholder="you@email.com"></div>
+            <div class="field">
+              <label for="type">Project type</label>
+              <select id="type" name="type">
+                <option>Photo retouching</option><option>Color grading</option><option>Cinematic edit</option>
+                <option>Thumbnail design</option><option>Social media content</option><option>Something else</option>
+              </select>
+            </div>
+            <div class="field"><label for="message">Project details</label><textarea id="message" name="message" required placeholder="What are you sending over, and what's it for?"></textarea></div>
+            <button type="submit" class="btn">Queue my project</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="mono">© 2026 SEVEN EDITINGS — TC 00:00 TO END</div>
+    <nav><ul><li><a href="#services">Services</a></li><li><a href="#portfolio">Portfolio</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#contact">Contact</a></li></ul></nav>
+  </div>
+</footer>
+
+<!-- Upgraded Video Player & Theater Modal -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-inner">
+    <div class="lightbox-topbar">
+      <div class="lightbox-topbar-left">
+        <button class="lightbox-back-btn" id="lightboxBackBtn" type="button" aria-label="Back to all cuts">
+          <span class="arrow">←</span> <span class="txt">BACK TO ALL CUTS</span>
+        </button>
+        <div class="lightbox-cut-nav">
+          <button class="cut-nav-btn" id="prevCutBtn" type="button" aria-label="Previous cut">◀ PREV TAKE</button>
+          <button class="cut-nav-btn" id="nextCutBtn" type="button" aria-label="Next cut">NEXT TAKE ▶</button>
+        </div>
+      </div>
+      <div class="lightbox-title">
+        <span id="modalCutId">CUT_01</span>
+        <span class="pill" id="modalCat">INSTAGRAM REELS</span>
+        <span class="pill">4K DCI • MASTER</span>
+        <span class="pill duration-pill" id="modalDurationPill">RUNTIME: --:--</span>
+      </div>
+      <button class="lightbox-close" id="lightboxClose" aria-label="Close modal">✕</button>
+    </div>
+
+    <!-- Single Video Player Theater -->
+    <div class="theater-container" id="theaterContainer" title="Click anywhere on footage to Play/Pause">
+      <video class="theater-video" id="theaterGradedVideo" loop playsinline preload="auto"></video>
+      <video class="theater-video" id="theaterRawVideo" loop muted playsinline preload="auto" style="display:none"></video>
+      <div class="theater-center-feedback" id="theaterFeedback"><span class="fb-icon">▶</span></div>
+    </div>
+
+    <!-- Master Dynamic Timeline Scrubber -->
+    <div class="theater-timeline-wrap">
+      <div class="theater-timeline-track" id="theaterTimelineTrack" title="Click or drag to scrub sequence">
+        <div class="theater-timeline-fill" id="theaterTimelineFill"></div>
+        <div class="theater-timeline-thumb" id="theaterTimelineThumb"></div>
+      </div>
+      <div class="theater-timeline-meta">
+        <div class="theater-tc mono" id="theaterTcDisplay">
+          <span class="rec-dot-live"></span>
+          TC <b>00:00:00:00</b> / <span id="theaterTcTotal">00:00:00:00</span>
+        </div>
+        <div class="theater-duration mono">
+          <span class="time-elapsed" id="theaterTimeElapsed">00:00</span> / <span class="time-total" id="theaterTimeTotal">00:00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Player Controls & Audio Suite Toolbar -->
+    <div class="theater-footer">
+      <div class="playback-controls">
+        <button class="play-btn" id="theaterPlayBtn"><span>▶</span> Play Take</button>
+        <button class="loop-btn active" id="theaterLoopBtn" title="Toggle Loop Mode"><span>🔁</span> Loop</button>
+        <button class="rotate-btn" id="theaterRotateBtn" type="button" title="Rotate video 90° (Press R)"><span class="rot-icon">⟳</span> Rotate <span class="theater-rot-deg mono" id="theaterRotDeg">0°</span></button>
+        <div class="speed-selector">
+          <button class="speed-btn" data-speed="0.5">0.5x</button>
+          <button class="speed-btn active" data-speed="1">1.0x</button>
+          <button class="speed-btn" data-speed="1.5">1.5x</button>
+          <button class="speed-btn" data-speed="2">2.0x</button>
+        </div>
+      </div>
+
+      <!-- High-Precision Audio Control Suite -->
+      <div class="theater-audio-suite" id="theaterAudioSuite">
+        <button class="audio-mute-btn" id="theaterMuteBtn" type="button" aria-label="Toggle sound" title="Mute / Unmute Audio">
+          <span class="speaker-icon" id="theaterSpeakerIcon">🔊</span>
+          <span class="mute-txt" id="theaterMuteTxt">SOUND ON</span>
+        </button>
+        <div class="volume-slider-wrap" title="Adjust Volume (Up/Down arrows)">
+          <input type="range" class="volume-slider" id="theaterVolumeSlider" min="0" max="1" step="0.02" value="1" aria-label="Volume level">
+          <div class="volume-fill" id="theaterVolumeFill"></div>
+        </div>
+        <div class="audio-vu-meter" id="audioVuMeter" title="Live Audio Signal Active">
+          <span class="vu-bar"></span>
+          <span class="vu-bar"></span>
+          <span class="vu-bar"></span>
+          <span class="vu-bar"></span>
+          <span class="vu-bar"></span>
+        </div>
+      </div>
+
+      <div class="clip-meta-readout">
+        <span>AUDIO: <b id="theaterAudioStatus" class="gold-pulse">MASTER STEREO (100%)</b></span>
+        <span>FPS: <b id="theaterFpsBadge">29.97 FPS</b></span>
+        <span>CODEC: <b>H.264 / AAC</b></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="studio.js"></script>
+<script src="studio_animations.js"></script>
+
+</body>
+</html>

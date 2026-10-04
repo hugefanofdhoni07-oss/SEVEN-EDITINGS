@@ -1,0 +1,294 @@
+/* ============ advanced studio animations & cinematic motion engine ============ */
+
+/* Animated Film Grain Overlay */
+body::after{
+  content:"";
+  position:fixed; inset:-50%;
+  pointer-events:none;
+  z-index:9996;
+  opacity:.038;
+  mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  animation:grainShift .35s steps(4) infinite;
+}
+@keyframes grainShift{
+  0%{ transform:translate(0,0); }
+  25%{ transform:translate(-2%,-3%); }
+  50%{ transform:translate(3%,1%); }
+  75%{ transform:translate(-1%,4%); }
+  100%{ transform:translate(0,0); }
+}
+
+/* Ambient Mouse Spotlight Follower */
+.ambient-spotlight{
+  position:fixed; top:0; left:0; width:650px; height:650px; border-radius:50%;
+  pointer-events:none; z-index:1;
+  background:radial-gradient(circle, rgba(242,201,76,0.065) 0%, rgba(201,162,39,0.02) 40%, transparent 70%);
+  transform:translate(-50%,-50%);
+  transition:opacity .5s var(--ease);
+  will-change:transform;
+}
+
+/* Atmospheric Floating Dust Particles */
+.film-dust{
+  position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden;
+}
+.film-dust .particle{
+  position:absolute; border-radius:50%;
+  background:radial-gradient(circle, rgba(242,201,76,.65) 0%, transparent 70%);
+  animation:dustFloat var(--dur, 12s) ease-in-out infinite;
+  animation-delay:var(--delay, 0s);
+  opacity:0;
+}
+@keyframes dustFloat{
+  0%{ transform:translate(0,0) scale(1); opacity:0; }
+  10%{ opacity:var(--peak, .4); }
+  90%{ opacity:var(--peak, .4); }
+  100%{ transform:translate(var(--dx, 40px), var(--dy, -120px)) scale(.3); opacity:0; }
+}
+
+.hero-vignette{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(ellipse 80% 70% at 50% 45%, transparent 40%, rgba(12,10,6,.65) 100%);
+  animation:vignettePulse 8s ease-in-out infinite;
+}
+@keyframes vignettePulse{
+  0%,100%{ opacity:.85; }
+  50%{ opacity:1; }
+}
+
+/* Cinematic Laser Scan Beam */
+.scan-beam{
+  position:absolute; left:0; right:0; height:180px; z-index:1; pointer-events:none;
+  background:linear-gradient(180deg, transparent 0%, rgba(242,201,76,.04) 50%, rgba(242,201,76,.14) 95%, rgba(242,201,76,.45) 100%);
+  border-bottom:1px solid rgba(242,201,76,.6);
+  box-shadow:0 6px 30px rgba(242,201,76,.3);
+  animation:scanBeamSweep 9s cubic-bezier(.45,0,.55,1) infinite;
+  opacity:0;
+}
+@keyframes scanBeamSweep{
+  0%{ top:-200px; opacity:0; }
+  10%{ opacity:.8; }
+  90%{ opacity:.8; }
+  100%{ top:105%; opacity:0; }
+}
+
+/* Shimmering Metallic Gold Headline Gradient */
+#hero h1 .gold{
+  background:linear-gradient(110deg, #c9a227 0%, #f2c94c 25%, #fff5cc 50%, #f2c94c 75%, #c9a227 100%);
+  background-size:250% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:goldShimmer 5s ease-in-out infinite;
+  display:inline-block;
+}
+@keyframes goldShimmer{
+  0%,100%{ background-position:0% 50%; }
+  50%{ background-position:100% 50%; }
+}
+
+/* Section Title Animated Underline Beam */
+.section-head h2{
+  position:relative;
+  display:inline-block;
+}
+.section-head h2::after{
+  content:"";
+  position:absolute; left:0; bottom:-8px; height:2px; width:0;
+  background:linear-gradient(90deg, var(--gold-bright), var(--gold), transparent);
+  box-shadow:0 0 10px rgba(242,201,76,0.6);
+  transition:width 1s var(--ease-out) .15s;
+}
+.section-head h2.in::after,
+.section-head h2[data-reveal].in::after{ width:100%; }
+
+/* ============ Service Card Cyberpunk HUD & Rotating Border ============ */
+.svc-card{
+  position:relative;
+}
+.svc-card::before{
+  content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(180deg, rgba(12,10,6,.2) 0%, rgba(12,10,6,.65) 45%, rgba(12,10,6,.95) 100%);
+}
+.svc-card .hud-corners{
+  position:absolute; inset:8px; pointer-events:none; z-index:4; opacity:0;
+  transition:opacity .35s var(--ease), inset .35s var(--ease-out);
+}
+.svc-card:hover .hud-corners{
+  opacity:1; inset:12px;
+}
+.svc-card .hud-corners span{
+  position:absolute; width:12px; height:12px; border-color:var(--gold-bright);
+}
+.svc-card .hud-corners .tl{ top:0; left:0; border-top:2px solid; border-left:2px solid; }
+.svc-card .hud-corners .tr{ top:0; right:0; border-top:2px solid; border-right:2px solid; }
+.svc-card .hud-corners .bl{ bottom:0; left:0; border-bottom:2px solid; border-left:2px solid; }
+.svc-card .hud-corners .br{ bottom:0; right:0; border-bottom:2px solid; border-right:2px solid; }
+
+/* Rotating Gradient Border on Service Cards */
+.svc-card .glow-border{
+  position:absolute; inset:-1px; border-radius:inherit; pointer-events:none; z-index:2; opacity:0;
+  background:conic-gradient(from var(--angle, 0deg), transparent 70%, var(--gold-bright) 90%, var(--gold) 100%);
+  transition:opacity .4s var(--ease);
+  animation:rotateAngle 4s linear infinite;
+  mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite:exclude;
+  -webkit-mask-composite:xor;
+  padding:2px;
+}
+.svc-card:hover .glow-border{ opacity:1; }
+@property --angle{
+  syntax:'<angle>';
+  initial-value:0deg;
+  inherits:false;
+}
+@keyframes rotateAngle{
+  to{ --angle:360deg; }
+}
+
+/* ============ Stats Audio VU Meters ============ */
+.stat{ position:relative; overflow:hidden; }
+.stat-vu-meter{
+  display:inline-flex; align-items:flex-end; gap:3px; height:18px; margin-left:8px; vertical-align:middle;
+}
+.stat-vu-meter span{
+  width:3px; background:var(--gold-bright); border-radius:1px;
+  animation:vuBounce 1.2s ease-in-out infinite alternate;
+}
+.stat-vu-meter span:nth-child(1){ height:40%; animation-delay:0s; }
+.stat-vu-meter span:nth-child(2){ height:80%; animation-delay:.2s; }
+.stat-vu-meter span:nth-child(3){ height:60%; animation-delay:.4s; }
+.stat-vu-meter span:nth-child(4){ height:100%; animation-delay:.1s; background:#e63946; }
+@keyframes vuBounce{
+  0%{ height:20%; }
+  50%{ height:95%; }
+  100%{ height:45%; }
+}
+
+/* ============ Portfolio Sprocket Strip & Live Split Wipe ============ */
+.sprocket-strip{
+  position:absolute; top:0; bottom:0; width:12px; z-index:3; pointer-events:none;
+  display:flex; flex-direction:column; justify-content:space-around; align-items:center;
+  opacity:.35; transition:opacity .3s var(--ease);
+}
+.sprocket-strip.left{ left:4px; }
+.sprocket-strip.right{ right:4px; }
+.sprocket-strip span{
+  width:6px; height:8px; border-radius:1px; background:var(--ink); border:1px solid rgba(242,201,76,0.3);
+}
+.port-tile:hover .sprocket-strip{ opacity:.75; }
+
+/* Interactive Mouse-Tracking Split Wipe on Portfolio Card */
+.port-tile .split-divider-line{
+  position:absolute; top:0; bottom:0; width:2px; background:var(--gold-bright);
+  box-shadow:0 0 10px rgba(242,201,76,0.8); z-index:3; pointer-events:none;
+  opacity:0; transition:opacity .25s var(--ease);
+  transform:translateX(-50%);
+}
+.port-tile:hover .split-divider-line{ opacity:1; }
+
+/* ============ Process NLE Interactive Timeline Simulation ============ */
+.nle-timeline-box{
+  position:relative; overflow:hidden;
+}
+.nle-live-playhead{
+  position:absolute; top:0; bottom:0; width:2px; background:#e63946;
+  box-shadow:0 0 10px #e63946; z-index:5; pointer-events:none;
+  animation:nlePlayheadRun 12s linear infinite;
+}
+.nle-live-playhead::before{
+  content:""; position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:8px solid #e63946;
+}
+@keyframes nlePlayheadRun{
+  0%{ left:36px; }
+  100%{ left:calc(100% - 10px); }
+}
+
+/* Pulsing Waveform in A1 Audio Track */
+.nle-audio-clip{
+  background:repeating-linear-gradient(90deg, rgba(242,201,76,0.25) 0px, rgba(242,201,76,0.25) 4px, rgba(242,201,76,0.08) 4px, rgba(242,201,76,0.08) 8px) !important;
+  animation:audioPulseBg 2s ease-in-out infinite;
+}
+@keyframes audioPulseBg{
+  0%,100%{ opacity:.8; }
+  50%{ opacity:1; filter:brightness(1.2); }
+}
+
+/* ============ Testimonials 3D Sparkle & Rating Aura ============ */
+.star-rating{
+  display:inline-flex; gap:4px; color:var(--gold-bright); margin-bottom:12px; font-size:1rem;
+}
+.star-rating .star{
+  animation:starTwinkle 2.5s ease-in-out infinite;
+}
+.star-rating .star:nth-child(1){ animation-delay:0s; }
+.star-rating .star:nth-child(2){ animation-delay:.3s; }
+.star-rating .star:nth-child(3){ animation-delay:.6s; }
+.star-rating .star:nth-child(4){ animation-delay:.9s; }
+.star-rating .star:nth-child(5){ animation-delay:1.2s; }
+@keyframes starTwinkle{
+  0%,100%{ transform:scale(1); opacity:.9; }
+  50%{ transform:scale(1.25); opacity:1; text-shadow:0 0 10px var(--gold-bright); }
+}
+
+/* ============ Pricing Featured Card Liquid Glow ============ */
+.price-card.featured::before{
+  box-shadow:0 0 12px rgba(242,201,76,0.6);
+}
+
+/* ============ Button Energy Charge Wave ============ */
+.btn::before{
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  background:radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+  opacity:0; transform:scale(0); transition:transform .4s var(--ease-out), opacity .4s var(--ease-out);
+}
+.btn:hover::before{
+  opacity:1; transform:scale(2);
+}
+
+/* ============ Interactive Click Ripple ============ */
+.click-ripple{
+  position:absolute; border-radius:50%;
+  background:radial-gradient(circle, rgba(242,201,76,.5) 0%, rgba(242,201,76,.15) 40%, transparent 70%);
+  pointer-events:none;
+  transform:translate(-50%,-50%) scale(0);
+  animation:rippleOut .65s var(--ease-out) forwards;
+  z-index:10;
+}
+@keyframes rippleOut{
+  to{ transform:translate(-50%,-50%) scale(4); opacity:0; }
+}
+
+/* ============ Live Recording Indicator Pulse ============ */
+@keyframes recPulse{
+  0%, 100%{ opacity:1; transform:scale(1); box-shadow:0 0 0 rgba(230,57,70,0); }
+  50%{ opacity:.4; transform:scale(.9); box-shadow:0 0 10px rgba(230,57,70,.9); }
+}
+
+/* ============ Glare & 3D Interactive Lighting on Cards ============ */
+.glare-overlay{
+  position:absolute; inset:0; pointer-events:none; border-radius:inherit;
+  background:radial-gradient(circle 300px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,.14), transparent 80%);
+  opacity:0; transition:opacity .35s var(--ease); z-index:4;
+}
+.port-tile:hover .glare-overlay, .svc-card:hover .glare-overlay, .price-card:hover .glare-overlay{
+  opacity:1;
+}
+
+/* Audio Waveform Canvas Animation inside Scrubber */
+.audio-wave-canvas{
+  filter:drop-shadow(0 0 6px rgba(242,201,76,.6));
+}
+
+/* Viewfinder Coordinates HUD */
+.cursor-hud{
+  position:fixed; top:0; left:0; pointer-events:none; z-index:9998;
+  font-family:'JetBrains Mono', monospace; font-size:.58rem; color:var(--gold-bright);
+  background:rgba(12,10,6,0.85); padding:2px 6px; border:1px solid rgba(242,201,76,0.3); border-radius:2px;
+  transform:translate(18px, 18px); opacity:0; transition:opacity .2s var(--ease);
+  letter-spacing:.06em;
+}
+body:hover .cursor-hud{ opacity:1; }
